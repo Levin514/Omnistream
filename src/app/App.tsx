@@ -208,7 +208,7 @@ function ContentCard({
   const isFav = favorites.includes(item.id);
   return (
     <div
-      className="group relative flex-shrink-0 w-36 sm:w-40 cursor-pointer rounded-xl overflow-hidden bg-card border transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/60"
+      className="group relative flex-shrink-0 w-36 sm:w-40 md:w-44 lg:w-48 xl:w-52 cursor-pointer rounded-xl overflow-hidden bg-card border transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/60"
       style={getTypeBorder(item.type)}
       onClick={() => onNavigate("detail", item.id)}
     >
@@ -455,28 +455,28 @@ function HeroCarousel({ items, onNavigate }: { items: ContentItem[]; onNavigate:
 
   const coverUrl = item.cover ?? `https://picsum.photos/seed/${encodeURIComponent(item.title)}/1200/600`;
   return (
-    <div className="relative rounded-2xl overflow-hidden mb-8 h-64 sm:h-80">
+    <div className="relative rounded-2xl overflow-hidden mb-8 h-64 sm:h-80 md:h-96 lg:h-[28rem] xl:h-[32rem] 2xl:h-[36rem]">
       <img src={coverUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 opacity-60" style={{ background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)` }} />
       <div className="absolute inset-0 opacity-20"
         style={{ backgroundImage: "radial-gradient(circle at 70% 30%, rgba(255,255,255,0.25), transparent 60%)" }} />
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-      <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8">
+      <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8 md:p-10 lg:p-12 xl:p-14">
         <div className="flex gap-1.5 mb-3">
           {item.trending && <span className="bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">TENDENCIA</span>}
           {item.newRelease && <span className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">NUEVO</span>}
           <span className="bg-white/20 text-white text-[10px] font-medium px-2 py-0.5 rounded-full backdrop-blur-sm">{item.genre}</span>
         </div>
-        <h1 className="text-white text-2xl sm:text-3xl font-bold mb-2 drop-shadow-lg">{item.title}</h1>
-        <p className="text-white/70 text-sm mb-4 max-w-md line-clamp-2">{item.synopsis}</p>
+        <h1 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 drop-shadow-lg">{item.title}</h1>
+        <p className="text-white/70 text-sm md:text-base mb-4 max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl line-clamp-2 md:line-clamp-3">{item.synopsis}</p>
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate("detail", item.id)}
-            className="bg-primary hover:bg-primary/80 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all hover:scale-105 flex items-center gap-2"
+            className="bg-primary hover:bg-primary/80 text-white px-5 py-2 rounded-xl text-sm md:text-base font-semibold transition-all hover:scale-105 flex items-center gap-2"
           >
-            <Eye size={15} /> Ver disponibilidad
+            <Eye size={15} className="md:size-[18px]" /> Ver disponibilidad
           </button>
-          <div className="flex items-center gap-2 text-white/70 text-sm">
+          <div className="flex items-center gap-2 text-white/70 text-sm md:text-base">
             <StarRating rating={item.rating} />
             <span>·</span>
             <span>{item.year}</span>
@@ -516,8 +516,7 @@ function AppShell({
       <Sidebar currentPage={currentPage} onNavigate={nav} collapsed={collapsed} onToggleCollapse={() => setCollapsed(!collapsed)} onFilterNavigate={onFilterNavigate} currentFilter={currentPage === "search" ? searchFilter : undefined} />
       <Header onNavigate={nav} searchQuery={searchQuery} onSearchChange={onSearchChange} onSearchSubmit={onSearchSubmit} sidebarCollapsed={collapsed} />
       <main
-        className="pt-16 pb-20 md:pb-6 min-h-screen transition-all duration-300"
-        style={{ paddingLeft: collapsed ? "80px" : "220px" }}
+        className={`pt-16 pb-20 md:pb-6 min-h-screen transition-all duration-300 ${collapsed ? "md:pl-[80px]" : "md:pl-[220px]"}`}
       >
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 py-6 hidden md:block" />
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6">
@@ -605,7 +604,7 @@ function LandingPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
         <h2 className="text-foreground text-xl font-bold mb-6 flex items-center gap-2">
           <TrendingUp size={20} className="text-primary" /> Tendencias ahora
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-4">
           {ALL_CONTENT.filter((c) => c.trending).map((item) => {
             return (
               <div key={item.id} onClick={() => onNavigate("login")}
@@ -887,7 +886,7 @@ function DashboardPage({
         <div className="flex gap-3 overflow-x-auto pb-2">
           {continueItems.map(({ item, progress }) => (
             <div key={item.id} onClick={() => onNavigate("detail", item.id)}
-              className="flex-shrink-0 w-48 cursor-pointer rounded-xl overflow-hidden bg-card border hover:border-primary/40 hover:scale-105 transition-all group"
+              className="flex-shrink-0 w-48 md:w-56 lg:w-64 cursor-pointer rounded-xl overflow-hidden bg-card border hover:border-primary/40 hover:scale-105 transition-all group"
               style={getTypeBorder(item.type)}>
               <Poster src={item.cover} title={item.title} className="h-28" />
               <div className="px-3 pb-3 pt-2">
@@ -941,7 +940,7 @@ function DashboardPage({
           </h2>
           <button onClick={() => onNavigate("sports")} className="text-primary text-xs font-medium hover:underline flex items-center gap-1">Ver todo <ChevronRight size={12} /></button>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {SPORTS_EVENTS.filter((e) => e.status === "live").concat(SPORTS_EVENTS.filter((e) => e.status === "upcoming")).slice(0, 3).map((event) => (
             <SportEventCard key={event.id} event={event} onNavigate={onNavigate} />
           ))}
@@ -1052,7 +1051,7 @@ function SearchPage({
           <p className="text-muted-foreground text-sm">Prueba con otro término de búsqueda</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {results.map((item) => (
             <SearchResultCard key={item.id} item={item} onNavigate={onNavigate} favorites={favorites} onToggleFavorite={onToggleFavorite} />
           ))}
@@ -1160,9 +1159,12 @@ function DetailPage({
           <div className="grid lg:grid-cols-[224px_minmax(0,1fr)] gap-6">
             <div className="space-y-4 rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
               <h1 className="text-4xl font-bold text-white">{item.title}</h1>
-              <div className="h-80 rounded-3xl bg-gradient-to-br from-[#500724] to-[#ec4899]" />
-              <button className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-100 hover:bg-white/10 transition-all">
-                Añadir a favoritos
+              <Poster src={item.cover} title={item.title} className="h-80 rounded-3xl" />
+              <button
+                onClick={() => onToggleFavorite(item.id)}
+                className={`w-full rounded-3xl border px-4 py-3 text-sm font-semibold transition-all ${isFav ? "bg-red-500/15 border-red-500/50 text-red-400" : "border-white/10 bg-white/5 text-slate-100 hover:bg-white/10"}`}>
+                <Heart size={15} className={`inline mr-2 ${isFav ? "fill-red-400" : ""}`} />
+                {isFav ? "En favoritos" : "Añadir a favoritos"}
               </button>
             </div>
 
@@ -1284,8 +1286,8 @@ function DetailPage({
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Poster + info */}
-            <div className="lg:w-56 flex-shrink-0">
-              <Poster src={item.cover} title={item.title} className="rounded-2xl mb-4 h-72 lg:h-80" />
+            <div className="lg:w-56 xl:w-64 2xl:w-72 flex-shrink-0">
+              <Poster src={item.cover} title={item.title} className="rounded-2xl mb-4 h-72 lg:h-80 xl:h-96" />
               <button
                 onClick={() => onToggleFavorite(item.id)}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border transition-all mb-2
@@ -1300,17 +1302,17 @@ function DetailPage({
 
             {/* Details */}
             <div className="flex-1 min-w-0">
-              <h1 className="text-foreground text-3xl font-bold mb-2">{item.title}</h1>
+              <h1 className="text-foreground text-3xl md:text-4xl lg:text-5xl font-bold mb-2">{item.title}</h1>
               <div className="flex items-center gap-3 flex-wrap mb-4">
                 <StarRating rating={item.rating} />
-                <span className="text-muted-foreground text-sm">{item.year}</span>
-                <span className="text-muted-foreground text-sm">·</span>
-                <span className="text-muted-foreground text-sm">{item.duration}</span>
-                <span className="text-muted-foreground text-sm">·</span>
-                <span className="bg-secondary text-muted-foreground text-xs px-2 py-0.5 rounded-lg">{item.genre}</span>
+                <span className="text-muted-foreground text-sm md:text-base">{item.year}</span>
+                <span className="text-muted-foreground text-sm md:text-base">·</span>
+                <span className="text-muted-foreground text-sm md:text-base">{item.duration}</span>
+                <span className="text-muted-foreground text-sm md:text-base">·</span>
+                <span className="bg-secondary text-muted-foreground text-xs md:text-sm px-2 py-0.5 rounded-lg">{item.genre}</span>
               </div>
 
-              <p className="text-muted-foreground text-sm leading-relaxed mb-6">{item.synopsis}</p>
+              <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-6">{item.synopsis}</p>
 
               <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
                 {item.director && (
@@ -1339,7 +1341,7 @@ function DetailPage({
                 <h2 className="text-foreground font-semibold text-base mb-3 flex items-center gap-2">
                   <Monitor size={16} className="text-primary" /> Disponible en
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-8">
                   {item.platforms.map((pName) => {
                     const p = PLATFORMS_DATA.find((x) => x.name === pName);
                     return (
@@ -1416,7 +1418,7 @@ function ChatbotPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
         <ArrowLeft size={16} /> Volver al dashboard
       </button>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] xl:grid-cols-[1.3fr_0.7fr] gap-8">
         <div className="space-y-6">
           <div className="rounded-3xl border border-border bg-card p-6">
             <div className="flex items-start justify-between gap-4 mb-6">
@@ -1511,7 +1513,7 @@ function SportsPage({ onNavigate, initialCat }: { onNavigate: (p: Page) => void;
           <p className="text-muted-foreground">No hay eventos en esta categoría</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map((event) => (
             <div key={event.id} onClick={() => setCat(event.sport)} className="bg-card border border-border rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-black/30 cursor-pointer">
               <div className="flex items-center justify-between mb-4">
@@ -1684,7 +1686,7 @@ function PlatformsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
             <h2 className="text-foreground font-semibold text-base mb-4">Contenido disponible ({platformContent.length})</h2>
             <div className="flex gap-3 overflow-x-auto pb-2">
               {platformContent.map((item) => (
-                <ContentCard key={item.id} item={item} onNavigate={(p, id) => onNavigate(p, id)} favorites={[]} onToggleFavorite={() => {}} />
+                <ContentCard key={item.id} item={item} onNavigate={(p) => onNavigate(p)} favorites={[]} onToggleFavorite={() => {}} />
               ))}
             </div>
             {platformContent.length === 0 && (
@@ -1714,7 +1716,7 @@ function PlatformsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
         <Monitor size={22} className="text-primary" /> Plataformas
       </h1>
       <p className="text-muted-foreground text-sm mb-8">Explora el catálogo de cada servicio de streaming</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         {PLATFORMS_DATA.map((p) => {
           const isAcquired = acquiredPlatforms.includes(p.id);
           return (
@@ -1772,12 +1774,12 @@ function FavoritesPage({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
           {items.map((item) => (
             <div key={item.id} className="group relative rounded-xl overflow-hidden bg-card border hover:border-primary/40 hover:scale-105 transition-all cursor-pointer"
               style={getTypeBorder(item.type)}
               onClick={() => onNavigate("detail", item.id)}>
-              <Poster id={item.id} title={item.title} className="h-52" />
+              <Poster src={item.cover} title={item.title} className="h-52" />
               <div className="p-2.5">
                 <p className="text-foreground text-xs font-semibold truncate">{item.title}</p>
                 <div className="flex items-center justify-between mt-1">
@@ -1816,7 +1818,7 @@ function HistoryPage({
       <h1 className="text-foreground text-2xl font-bold mb-8 flex items-center gap-2">
         <Clock size={22} className="text-blue-400" /> Historial
       </h1>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         <div>
           <h2 className="text-foreground font-semibold text-base mb-4">Búsquedas recientes</h2>
           <div className="space-y-2">
