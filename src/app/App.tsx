@@ -1154,45 +1154,62 @@ function DetailPage({
                 <p className="text-slate-300 text-sm leading-relaxed">{item.synopsis}</p>
               </div>
 
-              <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
-                <div className="grid gap-3">
-                  <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
-                    <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Nombre de sala</p>
-                    <p className="text-white text-sm font-semibold">Friday Movie Night</p>
+                <div className="grid gap-6 lg:grid-cols-[1.2fr_1fr_0.9fr]">
+                  <div className="space-y-4 rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                    <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
+                      <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Nombre de sala</p>
+                      <p className="text-white text-sm font-semibold">Friday Movie Night</p>
+                    </div>
+                    <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
+                      <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Código de sala</p>
+                      <p className="text-white text-sm font-semibold">ZX7Q-9M2L</p>
+                    </div>
+                    <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
+                      <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Opciones</p>
+                      <div className="flex flex-wrap gap-3">
+                        <button className="rounded-2xl border border-white/10 bg-[#121827] px-4 py-2 text-sm text-slate-200 hover:bg-white/5 transition-all">Copiar enlace</button>
+                        <button className="rounded-2xl border border-white/10 bg-[#121827] px-4 py-2 text-sm text-slate-200 hover:bg-white/5 transition-all">Iniciar</button>
+                      </div>
+                    </div>
+                    <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
+                      <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Participantes</p>
+                      <div className="flex items-center gap-3">
+                        {[...Array(3)].map((_, index) => (
+                          <div key={index} className="h-11 w-11 rounded-full bg-slate-700" />
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
-                    <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Código de sala</p>
-                    <p className="text-white text-sm font-semibold">ZX7Q-9M2L</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
-                <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-3">Opciones</p>
-                <div className="flex flex-wrap gap-3">
-                  <button className="rounded-2xl border border-white/10 bg-[#121827] px-4 py-2 text-sm text-slate-200 hover:bg-white/5 transition-all">Copiar enlace</button>
-                  <button className="rounded-2xl border border-white/10 bg-[#121827] px-4 py-2 text-sm text-slate-200 hover:bg-white/5 transition-all">Unirse a la sala</button>
+                  <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                    <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">Configuración de sala</p>
+                    <div className="space-y-4">
+                      {[
+                        { label: "Sala privada" },
+                        { label: "Chat" },
+                        { label: "Sincronizar reproducción" },
+                      ].map(({ label }) => (
+                        <button key={label} className="w-full rounded-2xl border border-white/10 bg-[#11161f] px-4 py-3 text-left text-sm text-slate-100 hover:bg-white/5 transition-all">
+                          <div className="flex items-center justify-between gap-3">
+                            <span>{label}</span>
+                            <span className="h-5 w-10 rounded-full bg-white/10 p-1 flex items-center">
+                              <span className="h-4 w-4 rounded-full bg-white shadow-sm" />
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                    <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">Código QR</p>
+                    <div className="h-72 w-full rounded-3xl bg-gradient-to-br from-[#500724] to-[#ec4899]" />
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-            <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
-              <div className="mb-4">
-                <p className="text-muted-foreground text-xs uppercase tracking-[0.2em]">Participantes</p>
-              </div>
-              <div className="flex items-center gap-3">
-                {[...Array(3)].map((_, index) => (
-                  <div key={index} className="h-11 w-11 rounded-full bg-slate-700" />
-                ))}
-              </div>
-            </div>
-            <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center gap-4">
-              <p className="text-muted-foreground text-xs uppercase tracking-[0.2em]">Código QR</p>
-              <div className="h-72 w-full rounded-3xl bg-gradient-to-br from-[#500724] to-[#ec4899]" />
-            </div>
-          </div>
+          
         </div>
       ) : (
         <>
