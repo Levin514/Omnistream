@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, type KeyboardEvent } from "react";
 import {
   Search, Bell, Star, Play, Heart, Clock, Home, Grid3X3,
   Bookmark, User, Settings, Film, Tv, Trophy, Monitor,
@@ -11,7 +11,8 @@ import {
 type Page =
   | "landing" | "login" | "register" | "dashboard"
   | "search" | "detail" | "sports" | "platforms"
-  | "favorites" | "history" | "profile" | "settings";
+  | "favorites" | "history" | "profile" | "settings"
+  | "chatbot";
 
 interface ContentItem {
   id: number;
@@ -48,6 +49,25 @@ interface PlatformInfo {
   quality: string;
   description: string;
 }
+
+interface ChatBubble {
+  sender: "user" | "bot";
+  text: string;
+}
+
+const RECOMMENDATIONS = [
+  { keywords: ["acción", "superhéroe", "aventura"], title: "The Dark Knight" },
+  { keywords: ["ciencia ficción", "espacio", "galaxia"], title: "Interstellar" },
+  { keywords: ["misterio", "thriller", "crimen"], title: "Stranger Things" },
+  { keywords: ["drama", "familia", "historia"], title: "Breaking Bad" },
+  { keywords: ["fantasía", "medieval", "reyes"], title: "House of the Dragon" },
+];
+
+const getBotRecommendation = (text: string) => {
+  const lower = text.toLowerCase();
+  const match = RECOMMENDATIONS.find((rec) => rec.keywords.some((k) => lower.includes(k)));
+  return match?.title ?? "The Mandalorian";
+};
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 const ALL_CONTENT: ContentItem[] = [
@@ -866,6 +886,21 @@ function DashboardPage({
         </div>
       </section>
 
+      <section className="mb-8 rounded-3xl border border-border bg-card p-6 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-foreground font-semibold text-lg">Chatbot de recomendaciones</h2>
+            <p className="text-muted-foreground text-sm mt-2 max-w-xl">Cuéntale al asistente qué te gusta y recibe una sugerencia de serie instantánea.</p>
+          </div>
+          <button
+            onClick={() => onNavigate("chatbot")}
+            className="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-primary/85"
+          >
+            Abrir chatbot
+          </button>
+        </div>
+      </section>
+
       {(tab === "todos" || tab === "movies") && (
         <HSection title="Tendencias" items={trending} onNavigate={onNavigate} favorites={favorites} onToggleFavorite={onToggleFavorite} icon={<TrendingUp size={16} />} />
       )}
@@ -878,6 +913,8 @@ function DashboardPage({
       {(tab === "todos" || tab === "series") && (
         <HSection title="Series populares" items={series} onNavigate={onNavigate} favorites={favorites} onToggleFavorite={onToggleFavorite} icon={<Tv size={16} />} />
       )}
+
+      
 
       {/* Sports live strip */}
       <section className="mb-8">
@@ -1067,6 +1104,7 @@ function DetailPage({
   if (!item) return <div className="text-muted-foreground p-8">Contenido no encontrado.</div>;
 
   const isFav = favorites.includes(item.id);
+  const [viewMode, setViewMode] = useState<"normal" | "cine">("normal");
   const [from, to] = getGradient(item.id);
   const similar = ALL_CONTENT.filter((c) => c.id !== item.id && (c.genre.split("·")[0].trim() === item.genre.split("·")[0].trim() || c.type === item.type)).slice(0, 6);
 
@@ -1077,125 +1115,298 @@ function DetailPage({
         <ArrowLeft size={16} /> Volver al dashboard
       </button>
 
-      {/* Banner */}
-      <div className="relative rounded-2xl overflow-hidden mb-8 h-56 sm:h-72"
-        style={{ background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)` }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 60% 30%, rgba(255,255,255,0.2), transparent 60%)" }} />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <button className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all hover:scale-110">
-            <Play size={28} className="text-white fill-white ml-1" />
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <span className="text-sm text-muted-foreground">Ver modo:</span>
+        {[
+          { key: "normal", label: "Normal" },
+          { key: "cine", label: "Cine virtual" },
+        ].map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setViewMode(key as "normal" | "cine")}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-all border ${viewMode === key ? "bg-primary text-white border-primary" : "bg-secondary text-muted-foreground border-border hover:border-primary/40"}`}>
+            {label}
           </button>
-        </div>
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="inline-block bg-black/40 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg">Tráiler oficial</div>
-        </div>
+        ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Poster + info */}
-        <div className="lg:w-56 flex-shrink-0">
-          <div className="rounded-2xl overflow-hidden mb-4 h-72 lg:h-80" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}>
-            <div className="w-full h-full flex items-end p-4">
-              <span className="text-white font-bold text-lg drop-shadow-lg">{item.title}</span>
+      {viewMode === "cine" ? (
+        <div className="space-y-8">
+          <div className="grid lg:grid-cols-[224px_minmax(0,1fr)] gap-6">
+            <div className="space-y-4 rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+              <h1 className="text-4xl font-bold text-white">{item.title}</h1>
+              <div className="h-80 rounded-3xl bg-gradient-to-br from-[#500724] to-[#ec4899]" />
+              <button className="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-100 hover:bg-white/10 transition-all">
+                Añadir a favoritos
+              </button>
             </div>
-          </div>
-          <button
-            onClick={() => onToggleFavorite(item.id)}
-            className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border transition-all mb-2
-              ${isFav ? "bg-red-500/15 border-red-500/50 text-red-400" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}>
-            <Heart size={15} className={isFav ? "fill-red-400" : ""} />
-            {isFav ? "En favoritos" : "Añadir a favoritos"}
-          </button>
-          <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground transition-all">
-            <Share2 size={15} /> Compartir
-          </button>
-        </div>
 
-        {/* Details */}
-        <div className="flex-1 min-w-0">
-          <h1 className="text-foreground text-3xl font-bold mb-2">{item.title}</h1>
-          <div className="flex items-center gap-3 flex-wrap mb-4">
-            <StarRating rating={item.rating} />
-            <span className="text-muted-foreground text-sm">{item.year}</span>
-            <span className="text-muted-foreground text-sm">·</span>
-            <span className="text-muted-foreground text-sm">{item.duration}</span>
-            <span className="text-muted-foreground text-sm">·</span>
-            <span className="bg-secondary text-muted-foreground text-xs px-2 py-0.5 rounded-lg">{item.genre}</span>
-          </div>
-
-          <p className="text-muted-foreground text-sm leading-relaxed mb-6">{item.synopsis}</p>
-
-          <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
-            {item.director && (
-              <div>
-                <span className="text-muted-foreground text-xs block mb-1">Director</span>
-                <span className="text-foreground font-medium">{item.director}</span>
+            <div className="space-y-4">
+              <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-[#11161f] px-3 py-2 text-sm text-[#FDC700]">
+                    <span className="h-2.5 w-2.5 rounded-full bg-[#FDC700]" />{item.rating.toFixed(1)}
+                  </div>
+                  <span className="text-slate-400 text-sm">{item.year}</span>
+                  <span className="text-slate-400 text-sm">·</span>
+                  <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-slate-300">{item.genre}</span>
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed">{item.synopsis}</p>
               </div>
-            )}
-            <div>
-              <span className="text-muted-foreground text-xs block mb-1">Tipo</span>
-              <span className="text-foreground font-medium capitalize">{item.type === "movie" ? "Película" : "Serie"}</span>
-            </div>
-            {item.cast && (
-              <div className="col-span-2">
-                <span className="text-muted-foreground text-xs block mb-1.5">Reparto principal</span>
-                <div className="flex gap-2 flex-wrap">
-                  {item.cast.map((actor) => (
-                    <span key={actor} className="bg-secondary text-foreground text-xs px-2.5 py-1 rounded-lg">{actor}</span>
-                  ))}
+
+              <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                <div className="grid gap-3">
+                  <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
+                    <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Nombre de sala</p>
+                    <p className="text-white text-sm font-semibold">Friday Movie Night</p>
+                  </div>
+                  <div className="rounded-3xl border border-white/10 bg-[#08101c] p-4">
+                    <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-2">Código de sala</p>
+                    <p className="text-white text-sm font-semibold">ZX7Q-9M2L</p>
+                  </div>
                 </div>
               </div>
-            )}
+
+              <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-3">Opciones</p>
+                <div className="flex flex-wrap gap-3">
+                  <button className="rounded-2xl border border-white/10 bg-[#121827] px-4 py-2 text-sm text-slate-200 hover:bg-white/5 transition-all">Copiar enlace</button>
+                  <button className="rounded-2xl border border-white/10 bg-[#121827] px-4 py-2 text-sm text-slate-200 hover:bg-white/5 transition-all">Unirse a la sala</button>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Availability section */}
-          <div>
-            <h2 className="text-foreground font-semibold text-base mb-3 flex items-center gap-2">
-              <Monitor size={16} className="text-primary" /> Disponible en
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-              {item.platforms.map((pName) => {
-                const p = PLATFORMS_DATA.find((x) => x.name === pName);
-                return (
-                  <div key={pName} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/40 transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${p?.color}22` }}>
-                        <span className="text-xs font-bold" style={{ color: p?.color }}>{pName[0]}</span>
-                      </div>
-                      <div>
-                        <p className="text-foreground text-sm font-semibold">{pName}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          <span className="text-green-400 text-[10px] font-medium flex items-center gap-0.5">
-                            <Check size={10} /> Disponible
-                          </span>
-                          <span className="text-muted-foreground text-[10px]">· {p?.quality}</span>
-                        </div>
-                        <p className="text-muted-foreground text-[10px]">{p?.price}</p>
-                      </div>
-                    </div>
-                    <a href="#" className="bg-primary hover:bg-primary/80 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:scale-105 flex items-center gap-1.5">
-                      <ExternalLink size={11} /> Abrir
-                    </a>
+          <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+            <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+              <div className="mb-4">
+                <p className="text-muted-foreground text-xs uppercase tracking-[0.2em]">Participantes</p>
+              </div>
+              <div className="flex items-center gap-3">
+                {[...Array(3)].map((_, index) => (
+                  <div key={index} className="h-11 w-11 rounded-full bg-slate-700" />
+                ))}
+              </div>
+            </div>
+            <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)] flex flex-col items-center justify-center gap-4">
+              <p className="text-muted-foreground text-xs uppercase tracking-[0.2em]">Código QR</p>
+              <div className="h-72 w-full rounded-3xl bg-gradient-to-br from-[#500724] to-[#ec4899]" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Banner */}
+          <div className="relative rounded-2xl overflow-hidden mb-8 h-56 sm:h-72"
+            style={{ background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)` }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 60% 30%, rgba(255,255,255,0.2), transparent 60%)" }} />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <button className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all hover:scale-110">
+                <Play size={28} className="text-white fill-white ml-1" />
+              </button>
+            </div>
+            <div className="absolute bottom-4 left-4 right-4">
+              <div className="inline-block bg-black/40 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg">Tráiler oficial</div>
+            </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Poster + info */}
+            <div className="lg:w-56 flex-shrink-0">
+              <div className="rounded-2xl overflow-hidden mb-4 h-72 lg:h-80" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}>
+                <div className="w-full h-full flex items-end p-4">
+                  <span className="text-white font-bold text-lg drop-shadow-lg">{item.title}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => onToggleFavorite(item.id)}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border transition-all mb-2
+                  ${isFav ? "bg-red-500/15 border-red-500/50 text-red-400" : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"}`}>
+                <Heart size={15} className={isFav ? "fill-red-400" : ""} />
+                {isFav ? "En favoritos" : "Añadir a favoritos"}
+              </button>
+              <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border border-border text-muted-foreground hover:border-primary/40 hover:text-foreground transition-all">
+                <Share2 size={15} /> Compartir
+              </button>
+            </div>
+
+            {/* Details */}
+            <div className="flex-1 min-w-0">
+              <h1 className="text-foreground text-3xl font-bold mb-2">{item.title}</h1>
+              <div className="flex items-center gap-3 flex-wrap mb-4">
+                <StarRating rating={item.rating} />
+                <span className="text-muted-foreground text-sm">{item.year}</span>
+                <span className="text-muted-foreground text-sm">·</span>
+                <span className="text-muted-foreground text-sm">{item.duration}</span>
+                <span className="text-muted-foreground text-sm">·</span>
+                <span className="bg-secondary text-muted-foreground text-xs px-2 py-0.5 rounded-lg">{item.genre}</span>
+              </div>
+
+              <p className="text-muted-foreground text-sm leading-relaxed mb-6">{item.synopsis}</p>
+
+              <div className="grid grid-cols-2 gap-4 mb-6 text-sm">
+                {item.director && (
+                  <div>
+                    <span className="text-muted-foreground text-xs block mb-1">Director</span>
+                    <span className="text-foreground font-medium">{item.director}</span>
                   </div>
-                );
-              })}
+                )}
+                <div>
+                  <span className="text-muted-foreground text-xs block mb-1">Tipo</span>
+                  <span className="text-foreground font-medium capitalize">{item.type === "movie" ? "Película" : "Serie"}</span>
+                </div>
+                {item.cast && (
+                  <div className="col-span-2">
+                    <span className="text-muted-foreground text-xs block mb-1.5">Reparto principal</span>
+                    <div className="flex gap-2 flex-wrap">
+                      {item.cast.map((actor) => (
+                        <span key={actor} className="bg-secondary text-foreground text-xs px-2.5 py-1 rounded-lg">{actor}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <h2 className="text-foreground font-semibold text-base mb-3 flex items-center gap-2">
+                  <Monitor size={16} className="text-primary" /> Disponible en
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                  {item.platforms.map((pName) => {
+                    const p = PLATFORMS_DATA.find((x) => x.name === pName);
+                    return (
+                      <div key={pName} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between hover:border-primary/40 transition-all">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${p?.color}22` }}>
+                            <span className="text-xs font-bold" style={{ color: p?.color }}>{pName[0]}</span>
+                          </div>
+                          <div>
+                            <p className="text-foreground text-sm font-semibold">{pName}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-green-400 text-[10px] font-medium flex items-center gap-0.5">
+                                <Check size={10} /> Disponible
+                              </span>
+                              <span className="text-muted-foreground text-[10px]">· {p?.quality}</span>
+                            </div>
+                            <p className="text-muted-foreground text-[10px]">{p?.price}</p>
+                          </div>
+                        </div>
+                        <a href="#" className="bg-primary hover:bg-primary/80 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:scale-105 flex items-center gap-1.5">
+                          <ExternalLink size={11} /> Abrir
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {similar.length > 0 && (
+            <section className="mt-4">
+              <h2 className="text-foreground font-semibold text-base mb-4">Contenido similar</h2>
+              <div className="flex gap-3 overflow-x-auto pb-2">
+                {similar.map((s) => (
+                  <ContentCard key={s.id} item={s} onNavigate={onNavigate} favorites={favorites} onToggleFavorite={onToggleFavorite} />
+                ))}
+              </div>
+            </section>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── CHATBOT PAGE ───────────────────────────────────────────────────────────
+function ChatbotPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<ChatBubble[]>([]);
+
+  const handleSend = () => {
+    if (!input.trim()) return;
+    const userMessage: ChatBubble = { sender: "user", text: input.trim() };
+    const botMessage: ChatBubble = {
+      sender: "bot",
+      text: `Basado en tus gustos, te recomiendo ver "${getBotRecommendation(input)}".`,
+    };
+    setMessages((prev) => [...prev, userMessage, botMessage]);
+    setInput("");
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleSend();
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={() => onNavigate("dashboard")}
+        className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 transition-colors text-sm">
+        <ArrowLeft size={16} /> Volver al dashboard
+      </button>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8">
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <div className="flex items-start justify-between gap-4 mb-6">
+              <div>
+                <p className="text-primary text-xs uppercase tracking-[0.3em] font-semibold mb-2">Chatbot</p>
+                <h1 className="text-3xl font-bold text-foreground">Recomendador de series</h1>
+                <p className="text-muted-foreground mt-2">Escribe tus gustos y el asistente te sugerirá el título ideal.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`rounded-3xl px-5 py-4 max-w-[90%] ${message.sender === "bot" ? "bg-secondary text-foreground self-start" : "bg-primary text-white self-end"}`}
+                  style={{ alignSelf: message.sender === "bot" ? "flex-start" : "flex-end" }}
+                >
+                  <p className="text-sm leading-relaxed">{message.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <p className="text-muted-foreground text-sm mb-4">Escribe tus gustos y presiona Enter o enviar.</p>
+            <div className="flex gap-3">
+              <input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Por ejemplo: misterio, personajes jóvenes, drama sobrenatural"
+                className="flex-1 bg-secondary border border-border rounded-2xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 transition-all"
+              />
+              <button
+                onClick={handleSend}
+                className="bg-primary hover:bg-primary/80 text-white rounded-2xl px-5 py-3 text-sm font-semibold transition-all"
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-border bg-card p-6">
+          <h2 className="text-foreground text-xl font-semibold mb-3">¿Cómo funciona?</h2>
+          <p className="text-muted-foreground text-sm leading-relaxed mb-4">Plasma tus gustos en el chat y el bot responderá con una sugerencia de serie que se adapta al estilo que prefieras.</p>
+          <div className="space-y-3">
+            <div className="rounded-2xl bg-secondary p-4">
+              <p className="text-foreground text-sm font-semibold">Ejemplo de conversación</p>
+              <p className="text-muted-foreground text-sm mt-2">Usuario: Me gustan las historias de misterio y suspenso con toque sobrenatural.</p>
+            </div>
+            <div className="rounded-2xl bg-secondary p-4">
+              <p className="text-foreground text-sm font-semibold">Respuesta del bot</p>
+              <p className="text-muted-foreground text-sm mt-2">Bot: Te recomiendo ver "Stranger Things".</p>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Similar content */}
-      {similar.length > 0 && (
-        <section className="mt-4">
-          <h2 className="text-foreground font-semibold text-base mb-4">Contenido similar</h2>
-          <div className="flex gap-3 overflow-x-auto pb-2">
-            {similar.map((s) => (
-              <ContentCard key={s.id} item={s} onNavigate={onNavigate} favorites={favorites} onToggleFavorite={onToggleFavorite} />
-            ))}
-          </div>
-        </section>
-      )}
     </div>
   );
 }
@@ -1701,6 +1912,7 @@ export default function App() {
       )}
       {page === "profile" && <ProfilePage onNavigate={navigate} favorites={favorites} />}
       {page === "settings" && <SettingsPage onNavigate={navigate} />}
+      {page === "chatbot" && <ChatbotPage onNavigate={navigate} />}
     </AppShell>
   );
 }
