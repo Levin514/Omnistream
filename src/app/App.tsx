@@ -27,6 +27,7 @@ interface ContentItem {
   director?: string;
   cast?: string[];
   cover?: string;
+  trailer?: string;
   trending?: boolean;
   newRelease?: boolean;
 }
@@ -72,22 +73,22 @@ const getBotRecommendation = (text: string) => {
 
 // ─── Mock Data ────────────────────────────────────────────────────────────────
 const ALL_CONTENT: ContentItem[] = [
-  { id: 1, title: "Inception", year: 2010, genre: "Sci-Fi · Thriller", rating: 8.8, duration: "2h 28m", type: "movie", platforms: ["Netflix", "Prime Video"], synopsis: "Un ladrón que roba secretos corporativos mediante la tecnología de intercambio de sueños es encargado de implantar una idea en la mente de un CEO.", director: "Christopher Nolan", cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page", "Tom Hardy"], trending: true },
-  { id: 2, title: "Interstellar", year: 2014, genre: "Sci-Fi · Drama", rating: 8.6, duration: "2h 49m", type: "movie", platforms: ["Paramount+", "Apple TV+"], synopsis: "Un equipo de exploradores viaja a través de un agujero de gusano en busca de un nuevo hogar para la humanidad.", director: "Christopher Nolan", cast: ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"], trending: true },
-  { id: 3, title: "The Dark Knight", year: 2008, genre: "Acción · Crimen", rating: 9.0, duration: "2h 32m", type: "movie", platforms: ["Max", "Disney+"], synopsis: "Batman acepta uno de sus mayores desafíos al enfrentarse al Joker, un criminal que busca sumir Gotham en el caos.", director: "Christopher Nolan", cast: ["Christian Bale", "Heath Ledger", "Aaron Eckhart"], trending: true },
-  { id: 4, title: "Gladiator", year: 2000, genre: "Acción · Drama", rating: 8.5, duration: "2h 35m", type: "movie", platforms: ["Netflix", "Paramount+"], synopsis: "Un general romano traicionado busca redención como gladiador en el Coliseo de Roma.", director: "Ridley Scott", cast: ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen"] },
-  { id: 5, title: "Dune: Part Two", year: 2024, genre: "Sci-Fi · Aventura", rating: 8.5, duration: "2h 47m", type: "movie", platforms: ["Max"], synopsis: "Paul Atreides se une a los Fremen en un viaje espiritual y marcial mientras busca venganza contra aquellos que destruyeron su familia.", director: "Denis Villeneuve", cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson"], newRelease: true },
-  { id: 6, title: "Oppenheimer", year: 2023, genre: "Drama · Historia", rating: 8.3, duration: "3h 0m", type: "movie", platforms: ["Prime Video", "Apple TV+"], synopsis: "La historia del físico J. Robert Oppenheimer y su papel crucial en el Proyecto Manhattan durante la Segunda Guerra Mundial.", director: "Christopher Nolan", cast: ["Cillian Murphy", "Emily Blunt", "Matt Damon"], newRelease: true },
-  { id: 7, title: "The Batman", year: 2022, genre: "Acción · Crimen", rating: 7.8, duration: "2h 56m", type: "movie", platforms: ["Max", "Netflix"], synopsis: "Batman desentraña la corrupción en Gotham mientras persigue a un asesino en serie conocido como el Acertijo.", director: "Matt Reeves", cast: ["Robert Pattinson", "Zoë Kravitz", "Jeffrey Wright"] },
-  { id: 8, title: "The Godfather", year: 1972, genre: "Crimen · Drama", rating: 9.2, duration: "2h 55m", type: "movie", platforms: ["Paramount+"], synopsis: "El patriarca de una familia de la mafia transfiere el control de su imperio al más reticente de sus hijos.", director: "Francis Ford Coppola", cast: ["Marlon Brando", "Al Pacino", "James Caan"] },
-  { id: 101, title: "Breaking Bad", year: 2008, genre: "Drama · Crimen", rating: 9.5, duration: "S3 · E7", type: "series", platforms: ["Netflix"], synopsis: "Un profesor de química diagnosticado con cáncer terminal se convierte en fabricante de metanfetamina para asegurar el futuro de su familia.", director: "Vince Gilligan", cast: ["Bryan Cranston", "Aaron Paul", "Anna Gunn"], trending: true },
-  { id: 102, title: "Stranger Things", year: 2016, genre: "Drama · Sci-Fi", rating: 8.7, duration: "S4 · E7", type: "series", platforms: ["Netflix"], synopsis: "En Hawkins, la desaparición de un niño desata una serie de eventos sobrenaturales que sus amigos investigan.", director: "Hermanos Duffer", cast: ["Millie Bobby Brown", "Finn Wolfhard", "David Harbour"], trending: true },
-  { id: 103, title: "The Mandalorian", year: 2019, genre: "Sci-Fi · Acción", rating: 8.7, duration: "S5 · E5", type: "series", platforms: ["Disney+"], synopsis: "Un cazarrecompensas mandaloriano navega por los confines de la galaxia lejos de la autoridad de la Nueva República.", director: "Jon Favreau", cast: ["Pedro Pascal", "Gina Carano", "Carl Weathers"], trending: true },
-  { id: 104, title: "Money Heist", year: 2017, genre: "Crimen · Drama", rating: 8.2, duration: "P7 · E3", type: "series", platforms: ["Netflix"], synopsis: "Un criminal misterioso planea el robo perfecto a la Fábrica Nacional de Moneda y Timbre.", director: "Álex Pina", cast: ["Álvaro Morte", "Úrsula Corberó", "Itziar Ituño"] },
-  { id: 105, title: "The Last of Us", year: 2023, genre: "Drama · Sci-Fi", rating: 8.8, duration: "S2 · E4", type: "series", platforms: ["Max"], synopsis: "Joel y Ellie deben sobrevivir en un mundo post-apocalíptico infestado de hongos mutantes que transforman a las personas.", director: "Craig Mazin", cast: ["Pedro Pascal", "Bella Ramsey", "Gabriel Luna"], newRelease: true },
-  { id: 106, title: "House of the Dragon", year: 2022, genre: "Fantasía · Drama", rating: 8.4, duration: "S2 · E8", type: "series", platforms: ["Max"], synopsis: "Precuela de Game of Thrones que sigue la guerra civil dentro de la Casa Targaryen doscientos años antes de los eventos originales.", director: "George R.R. Martin", cast: ["Paddy Considine", "Emma D'Arcy", "Matt Smith"], trending: true },
-  { id: 107, title: "The Bear", year: 2022, genre: "Drama · Comedia", rating: 8.6, duration: "S3 · E6", type: "series", platforms: ["Disney+"], synopsis: "Un chef de alta cocina regresa a Chicago para administrar el restaurante familiar de su hermano fallecido y transforma un sándwich ordinario en algo extraordinario.", director: "Christopher Storer", cast: ["Jeremy Allen White", "Ebon Moss-Bachrach", "Ayo Edebiri"], newRelease: true },
-  { id: 108, title: "Severance", year: 2022, genre: "Sci-Fi · Thriller", rating: 8.7, duration: "S2 · E3", type: "series", platforms: ["Apple TV+"], synopsis: "Empleados de Lumon Industries aceptan un procedimiento médico para separar sus memorias laborales de las personales.", director: "Dan Erickson", cast: ["Adam Scott", "Britt Lower", "Patricia Arquette"], newRelease: true },
+  { id: 1, title: "Inception", year: 2010, genre: "Sci-Fi · Thriller", rating: 8.8, duration: "2h 28m", type: "movie", platforms: ["Netflix", "Prime Video"], synopsis: "Un ladrón que roba secretos corporativos mediante la tecnología de intercambio de sueños es encargado de implantar una idea en la mente de un CEO.", director: "Christopher Nolan", cast: ["Leonardo DiCaprio", "Joseph Gordon-Levitt", "Elliot Page", "Tom Hardy"], trailer: "https://www.youtube.com/watch?v=YoHD9XEInc0", trending: true },
+  { id: 2, title: "Interstellar", year: 2014, genre: "Sci-Fi · Drama", rating: 8.6, duration: "2h 49m", type: "movie", platforms: ["Paramount+", "Apple TV+"], synopsis: "Un equipo de exploradores viaja a través de un agujero de gusano en busca de un nuevo hogar para la humanidad.", director: "Christopher Nolan", cast: ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"], trailer: "https://www.youtube.com/watch?v=zSWdZVtXT7E", trending: true },
+  { id: 3, title: "The Dark Knight", year: 2008, genre: "Acción · Crimen", rating: 9.0, duration: "2h 32m", type: "movie", platforms: ["Max", "Disney+"], synopsis: "Batman acepta uno de sus mayores desafíos al enfrentarse al Joker, un criminal que busca sumir Gotham en el caos.", director: "Christopher Nolan", cast: ["Christian Bale", "Heath Ledger", "Aaron Eckhart"], trailer: "https://www.youtube.com/embed/ppOVLojanC8?si=UWTUbiNxaxm4WUJL", trending: true },
+  { id: 4, title: "Gladiator", year: 2000, genre: "Acción · Drama", rating: 8.5, duration: "2h 35m", type: "movie", platforms: ["Netflix", "Paramount+"], synopsis: "Un general romano traicionado busca redención como gladiador en el Coliseo de Roma.", director: "Ridley Scott", cast: ["Russell Crowe", "Joaquin Phoenix", "Connie Nielsen"], trailer: "https://www.youtube.com/watch?v=ol67y7QrA7M" },
+  { id: 5, title: "Dune: Part Two", year: 2024, genre: "Sci-Fi · Aventura", rating: 8.5, duration: "2h 47m", type: "movie", platforms: ["Max"], synopsis: "Paul Atreides se une a los Fremen en un viaje espiritual y marcial mientras busca venganza contra aquellos que destruyeron su familia.", director: "Denis Villeneuve", cast: ["Timothée Chalamet", "Zendaya", "Rebecca Ferguson"], trailer: "https://www.youtube.com/watch?v=Way9Dgnykes", newRelease: true },
+  { id: 6, title: "Oppenheimer", year: 2023, genre: "Drama · Historia", rating: 8.3, duration: "3h 0m", type: "movie", platforms: ["Prime Video", "Apple TV+"], synopsis: "La historia del físico J. Robert Oppenheimer y su papel crucial en el Proyecto Manhattan durante la Segunda Guerra Mundial.", director: "Christopher Nolan", cast: ["Cillian Murphy", "Emily Blunt", "Matt Damon"], trailer: "https://www.youtube.com/watch?v=uYPbbksJxIg", newRelease: true },
+  { id: 7, title: "The Batman", year: 2022, genre: "Acción · Crimen", rating: 7.8, duration: "2h 56m", type: "movie", platforms: ["Max", "Netflix"], synopsis: "Batman desentraña la corrupción en Gotham mientras persigue a un asesino en serie conocido como el Acertijo.", director: "Matt Reeves", cast: ["Robert Pattinson", "Zoë Kravitz", "Jeffrey Wright"], trailer: "https://www.youtube.com/watch?v=mqqft2x_Aa4" },
+  { id: 8, title: "The Godfather", year: 1972, genre: "Crimen · Drama", rating: 9.2, duration: "2h 55m", type: "movie", platforms: ["Paramount+"], synopsis: "El patriarca de una familia de la mafia transfiere el control de su imperio al más reticente de sus hijos.", director: "Francis Ford Coppola", cast: ["Marlon Brando", "Al Pacino", "James Caan"], trailer: "https://www.youtube.com/watch?v=sY1S34973zA" },
+  { id: 101, title: "Breaking Bad", year: 2008, genre: "Drama · Crimen", rating: 9.5, duration: "S3 · E7", type: "series", platforms: ["Netflix"], synopsis: "Un profesor de química diagnosticado con cáncer terminal se convierte en fabricante de metanfetamina para asegurar el futuro de su familia.", director: "Vince Gilligan", cast: ["Bryan Cranston", "Aaron Paul", "Anna Gunn"], trailer: "https://www.youtube.com/embed/HhesaQXLuRY?si=7OZCiejHCSNexcHC", trending: true },
+  { id: 102, title: "Stranger Things", year: 2016, genre: "Drama · Sci-Fi", rating: 8.7, duration: "S4 · E7", type: "series", platforms: ["Netflix"], synopsis: "En Hawkins, la desaparición de un niño desata una serie de eventos sobrenaturales que sus amigos investigan.", director: "Hermanos Duffer", cast: ["Millie Bobby Brown", "Finn Wolfhard", "David Harbour"], trailer: "https://www.youtube.com/watch?v=b9EkMc79ZSU", trending: true },
+  { id: 103, title: "The Mandalorian", year: 2019, genre: "Sci-Fi · Acción", rating: 8.7, duration: "S5 · E5", type: "series", platforms: ["Disney+"], synopsis: "Un cazarrecompensas mandaloriano navega por los confines de la galaxia lejos de la autoridad de la Nueva República.", director: "Jon Favreau", cast: ["Pedro Pascal", "Gina Carano", "Carl Weathers"], trailer: "https://www.youtube.com/watch?v=aOC8E8z_ifw", trending: true },
+  { id: 104, title: "Money Heist", year: 2017, genre: "Crimen · Drama", rating: 8.2, duration: "P7 · E3", type: "series", platforms: ["Netflix"], synopsis: "Un criminal misterioso planea el robo perfecto a la Fábrica Nacional de Moneda y Timbre.", director: "Álex Pina", cast: ["Álvaro Morte", "Úrsula Corberó", "Itziar Ituño"], trailer: "https://www.youtube.com/watch?v=_InqQJRqGW4" },
+  { id: 105, title: "The Last of Us", year: 2023, genre: "Drama · Sci-Fi", rating: 8.8, duration: "S2 · E4", type: "series", platforms: ["Max"], synopsis: "Joel y Ellie deben sobrevivir en un mundo post-apocalíptico infestado de hongos mutantes que transforman a las personas.", director: "Craig Mazin", cast: ["Pedro Pascal", "Bella Ramsey", "Gabriel Luna"], trailer: "https://www.youtube.com/embed/yyGetSp7CIc?si=Pwxlum139kvLygP6", newRelease: true },
+  { id: 106, title: "House of the Dragon", year: 2022, genre: "Fantasía · Drama", rating: 8.4, duration: "S2 · E8", type: "series", platforms: ["Max"], synopsis: "Precuela de Game of Thrones que sigue la guerra civil dentro de la Casa Targaryen doscientos años antes de los eventos originales.", director: "George R.R. Martin", cast: ["Paddy Considine", "Emma D'Arcy", "Matt Smith"], trailer: "https://www.youtube.com/watch?v=DotnJ7tTA34", trending: true },
+  { id: 107, title: "The Bear", year: 2022, genre: "Drama · Comedia", rating: 8.6, duration: "S3 · E6", type: "series", platforms: ["Disney+"], synopsis: "Un chef de alta cocina regresa a Chicago para administrar el restaurante familiar de su hermano fallecido y transforma un sándwich ordinario en algo extraordinario.", director: "Christopher Storer", cast: ["Jeremy Allen White", "Ebon Moss-Bachrach", "Ayo Edebiri"], trailer: "https://www.youtube.com/embed/sH5wj4WP7hs?si=Ng-MQco7hgPu_UUz", newRelease: true },
+  { id: 108, title: "Severance", year: 2022, genre: "Sci-Fi · Thriller", rating: 8.7, duration: "S2 · E3", type: "series", platforms: ["Apple TV+"], synopsis: "Empleados de Lumon Industries aceptan un procedimiento médico para separar sus memorias laborales de las personales.", director: "Dan Erickson", cast: ["Adam Scott", "Britt Lower", "Patricia Arquette"], trailer: "https://www.youtube.com/watch?v=x1PBujWbA_Y", newRelease: true },
 ];
 
 const SPORTS_EVENTS: SportEvent[] = [
@@ -135,6 +136,12 @@ const getGradient = (id: number) => POSTER_GRADIENTS[id % POSTER_GRADIENTS.lengt
 
 const getPlatformColor = (name: string) =>
   PLATFORMS_DATA.find((p) => p.name === name)?.color ?? "#3B82F6";
+
+const TYPE_BORDER = { movie: "#ef4444", series: "#3b82f6", width: "2px" } as const;
+const getTypeBorder = (type: "movie" | "series") => ({
+  borderColor: TYPE_BORDER[type],
+  borderWidth: TYPE_BORDER.width,
+});
 
 const CONTINUE_WATCHING = [
   { id: 101, progress: 65 },
@@ -201,7 +208,8 @@ function ContentCard({
   const isFav = favorites.includes(item.id);
   return (
     <div
-      className="group relative flex-shrink-0 w-36 sm:w-40 cursor-pointer rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/60 hover:border-primary/40"
+      className="group relative flex-shrink-0 w-36 sm:w-40 cursor-pointer rounded-xl overflow-hidden bg-card border transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/60"
+      style={getTypeBorder(item.type)}
       onClick={() => onNavigate("detail", item.id)}
     >
       <Poster src={item.cover} title={item.title} className="h-52" />
@@ -272,17 +280,19 @@ function HSection({
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 function Sidebar({
-  currentPage, onNavigate, collapsed, onToggleCollapse,
+  currentPage, onNavigate, collapsed, onToggleCollapse, onFilterNavigate, currentFilter,
 }: {
   currentPage: Page;
   onNavigate: (page: Page) => void;
   collapsed: boolean;
   onToggleCollapse: () => void;
+  onFilterNavigate: (page: Page, filter: string) => void;
+  currentFilter?: string;
 }) {
-  const navItems = [
+  const navItems: { id: Page; label: string; icon: React.ReactNode; filter?: string }[] = [
     { id: "dashboard" as Page, label: "Inicio", icon: <Home size={18} /> },
-    { id: "search" as Page, label: "Películas", icon: <Film size={18} /> },
-    { id: "search" as Page, label: "Series", icon: <Tv size={18} /> },
+    { id: "search" as Page, label: "Películas", icon: <Film size={18} />, filter: "Películas" },
+    { id: "search" as Page, label: "Series", icon: <Tv size={18} />, filter: "Series" },
     { id: "sports" as Page, label: "Deportes", icon: <Trophy size={18} /> },
     { id: "platforms" as Page, label: "Plataformas", icon: <Monitor size={18} /> },
     { id: "favorites" as Page, label: "Favoritos", icon: <Heart size={18} /> },
@@ -311,18 +321,20 @@ function Sidebar({
             </div>
           </button>
         )}
-        <button onClick={onToggleCollapse} className={`p-1.5 rounded-lg hover:bg-sidebar-accent transition-colors text-muted-foreground ${collapsed ? "hidden" : ""}`}>
-          <Menu size={16} />
+        <button onClick={onToggleCollapse} className="p-1.5 rounded-lg hover:bg-sidebar-accent transition-colors text-muted-foreground">
+          {collapsed ? <ChevronRight size={16} /> : <Menu size={16} />}
         </button>
       </div>
 
       <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
-        {navItems.map(({ id, label, icon }, idx) => {
-          const isActive = currentPage === id && (label === "Inicio" ? true : currentPage === id);
+        {navItems.map(({ id, label, icon, filter }, idx) => {
+          const isActive = filter
+            ? currentPage === id && currentFilter === filter
+            : currentPage === id;
           return (
             <button
               key={`${id}-${idx}`}
-              onClick={() => onNavigate(id)}
+              onClick={() => (filter ? onFilterNavigate(id, filter) : onNavigate(id))}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group
                 ${isActive ? "bg-primary/15 text-primary" : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"}`}
               title={collapsed ? label : undefined}
@@ -441,11 +453,14 @@ function HeroCarousel({ items, onNavigate }: { items: ContentItem[]; onNavigate:
   const item = featured[idx];
   const [from, to] = getGradient(item.id);
 
+  const coverUrl = item.cover ?? `https://picsum.photos/seed/${encodeURIComponent(item.title)}/1200/600`;
   return (
-    <div className="relative rounded-2xl overflow-hidden mb-8 h-64 sm:h-80" style={{ background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)` }}>
-      <div className="absolute inset-0 opacity-30"
-        style={{ backgroundImage: "radial-gradient(circle at 70% 30%, rgba(255,255,255,0.2), transparent 60%)" }} />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+    <div className="relative rounded-2xl overflow-hidden mb-8 h-64 sm:h-80">
+      <img src={coverUrl} alt={item.title} className="absolute inset-0 w-full h-full object-cover" />
+      <div className="absolute inset-0 opacity-60" style={{ background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)` }} />
+      <div className="absolute inset-0 opacity-20"
+        style={{ backgroundImage: "radial-gradient(circle at 70% 30%, rgba(255,255,255,0.25), transparent 60%)" }} />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
       <div className="relative z-10 h-full flex flex-col justify-end p-6 sm:p-8">
         <div className="flex gap-1.5 mb-3">
           {item.trending && <span className="bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">TENDENCIA</span>}
@@ -482,7 +497,7 @@ function HeroCarousel({ items, onNavigate }: { items: ContentItem[]; onNavigate:
 
 // ─── Page wrapper (for inner pages with sidebar/header) ───────────────────────
 function AppShell({
-  children, onNavigate, currentPage, searchQuery, onSearchChange, onSearchSubmit,
+  children, onNavigate, currentPage, searchQuery, onSearchChange, onSearchSubmit, onFilterNavigate, searchFilter,
 }: {
   children: React.ReactNode;
   onNavigate: (p: Page, id?: number) => void;
@@ -490,13 +505,15 @@ function AppShell({
   searchQuery: string;
   onSearchChange: (v: string) => void;
   onSearchSubmit: () => void;
+  onFilterNavigate: (p: Page, filter: string) => void;
+  searchFilter: string;
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const nav = (p: Page) => onNavigate(p);
 
   return (
     <div className="min-h-screen bg-background font-[Inter,sans-serif]">
-      <Sidebar currentPage={currentPage} onNavigate={nav} collapsed={collapsed} onToggleCollapse={() => setCollapsed(!collapsed)} />
+      <Sidebar currentPage={currentPage} onNavigate={nav} collapsed={collapsed} onToggleCollapse={() => setCollapsed(!collapsed)} onFilterNavigate={onFilterNavigate} currentFilter={currentPage === "search" ? searchFilter : undefined} />
       <Header onNavigate={nav} searchQuery={searchQuery} onSearchChange={onSearchChange} onSearchSubmit={onSearchSubmit} sidebarCollapsed={collapsed} />
       <main
         className="pt-16 pb-20 md:pb-6 min-h-screen transition-all duration-300"
@@ -590,13 +607,11 @@ function LandingPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {ALL_CONTENT.filter((c) => c.trending).map((item) => {
-            const [from, to] = getGradient(item.id);
             return (
               <div key={item.id} onClick={() => onNavigate("login")}
-                className="cursor-pointer rounded-xl overflow-hidden bg-card border border-border hover:border-primary/40 hover:scale-105 transition-all duration-300 group">
-                <div className="h-40 relative" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}>
-                  <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
-                </div>
+                className="cursor-pointer rounded-xl overflow-hidden bg-card border hover:border-primary/40 hover:scale-105 transition-all duration-300 group"
+                style={getTypeBorder(item.type)}>
+                <Poster src={item.cover} title={item.title} className="h-40" />
                 <div className="p-2.5">
                   <p className="text-foreground text-xs font-semibold truncate">{item.title}</p>
                   <div className="flex items-center justify-between mt-1">
@@ -872,7 +887,8 @@ function DashboardPage({
         <div className="flex gap-3 overflow-x-auto pb-2">
           {continueItems.map(({ item, progress }) => (
             <div key={item.id} onClick={() => onNavigate("detail", item.id)}
-              className="flex-shrink-0 w-48 cursor-pointer rounded-xl overflow-hidden bg-card border border-border hover:border-primary/40 hover:scale-105 transition-all group">
+              className="flex-shrink-0 w-48 cursor-pointer rounded-xl overflow-hidden bg-card border hover:border-primary/40 hover:scale-105 transition-all group"
+              style={getTypeBorder(item.type)}>
               <Poster src={item.cover} title={item.title} className="h-28" />
               <div className="px-3 pb-3 pt-2">
                 <p className="text-foreground text-xs font-semibold truncate">{item.title}</p>
@@ -975,21 +991,22 @@ function SportEventCard({ event, onNavigate }: { event: SportEvent; onNavigate: 
 
 // ─── SEARCH PAGE ──────────────────────────────────────────────────────────────
 function SearchPage({
-  onNavigate, searchQuery, favorites, onToggleFavorite,
+  onNavigate, searchQuery, favorites, onToggleFavorite, initialFilter = "Todos",
 }: {
   onNavigate: (p: Page, id?: number) => void;
   searchQuery: string;
   favorites: number[];
   onToggleFavorite: (id: number) => void;
+  initialFilter?: string;
 }) {
-  const [filter, setFilter] = useState("Todos");
+  const [filter, setFilter] = useState(initialFilter);
   const [sort, setSort] = useState("Popularidad");
   const filters = ["Todos", "Películas", "Series", "Gratis", "Suscripción"];
   const sorts = ["Popularidad", "Calificación", "Año"];
 
   const results = ALL_CONTENT.filter((c) => {
     const q = searchQuery.toLowerCase();
-    const matchQ = !q || c.title.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q);
+    const matchQ = !q || c.title.toLowerCase().includes(q) || c.genre.toLowerCase().includes(q) || (c.cast && c.cast.some((actor) => actor.toLowerCase().includes(q)));
     const matchF = filter === "Todos" || (filter === "Películas" && c.type === "movie") || (filter === "Series" && c.type === "series");
     return matchQ && matchF;
   }).sort((a, b) => {
@@ -1056,18 +1073,18 @@ function SearchResultCard({
   const isFav = favorites.includes(item.id);
   const [from, to] = getGradient(item.id);
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/40 transition-all hover:shadow-xl hover:shadow-black/40 group">
+    <div className="bg-card border rounded-xl overflow-hidden hover:border-primary/40 transition-all hover:shadow-xl hover:shadow-black/40 group cursor-pointer"
+      style={getTypeBorder(item.type)}
+      onClick={() => onNavigate("detail", item.id)}>
       <div className="flex">
-        <div className="w-24 flex-shrink-0 h-32 cursor-pointer relative"
-          onClick={() => onNavigate("detail", item.id)}>
-        <Poster src={item.cover} title={item.title} className="h-full w-full" />
+        <div className="w-24 flex-shrink-0 h-32 relative">
+          <Poster src={item.cover} title={item.title} className="h-full w-full" />
           <div className="absolute inset-0 opacity-20 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
         <div className="flex-1 p-3 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-1">
-            <h3 className="text-foreground font-semibold text-sm leading-tight truncate cursor-pointer hover:text-primary transition-colors"
-              onClick={() => onNavigate("detail", item.id)}>{item.title}</h3>
-            <button onClick={() => onToggleFavorite(item.id)}>
+            <h3 className="text-foreground font-semibold text-sm leading-tight truncate">{item.title}</h3>
+            <button onClick={(e) => { e.stopPropagation(); onToggleFavorite(item.id); }}>
               <Heart size={14} className={isFav ? "fill-red-500 text-red-500" : "text-muted-foreground hover:text-red-400"} />
             </button>
           </div>
@@ -1083,10 +1100,9 @@ function SearchResultCard({
             {item.platforms.slice(0, 2).map((p) => <PlatformPill key={p} name={p} />)}
             {item.platforms.length > 2 && <span className="text-muted-foreground text-[10px]">+{item.platforms.length - 2}</span>}
           </div>
-          <button onClick={() => onNavigate("detail", item.id)}
-            className="text-[10px] font-semibold text-primary hover:underline flex items-center gap-1">
+          <span className="text-[10px] font-semibold text-primary flex items-center gap-1">
             <ExternalLink size={10} /> Ver disponibilidad
-          </button>
+          </span>
         </div>
       </div>
     </div>
@@ -1095,18 +1111,25 @@ function SearchResultCard({
 
 // ─── DETAIL PAGE ──────────────────────────────────────────────────────────────
 function DetailPage({
-  itemId, onNavigate, favorites, onToggleFavorite,
+  itemId, onNavigate, favorites, onToggleFavorite, onActorClick,
 }: {
   itemId: number;
   onNavigate: (p: Page, id?: number) => void;
   favorites: number[];
   onToggleFavorite: (id: number) => void;
+  onActorClick?: (actor: string) => void;
 }) {
   const item = ALL_CONTENT.find((c) => c.id === itemId);
   if (!item) return <div className="text-muted-foreground p-8">Contenido no encontrado.</div>;
 
   const isFav = favorites.includes(item.id);
   const [viewMode, setViewMode] = useState<"normal" | "cine">("normal");
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [cinemaToggles, setCinemaToggles] = useState<Record<string, boolean>>({
+    "Sala privada": false,
+    "Chat": true,
+    "Sincronizar reproducción": true,
+  });
   const [from, to] = getGradient(item.id);
   const similar = ALL_CONTENT.filter((c) => c.id !== item.id && (c.genre.split("·")[0].trim() === item.genre.split("·")[0].trim() || c.type === item.type)).slice(0, 6);
 
@@ -1186,16 +1209,18 @@ function DetailPage({
                   <div className="rounded-[2rem] border border-white/10 bg-[#090b14] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
                     <p className="text-muted-foreground text-xs uppercase tracking-[0.2em] mb-4">Configuración de sala</p>
                     <div className="space-y-4">
-                      {[
-                        { label: "Sala privada" },
-                        { label: "Chat" },
-                        { label: "Sincronizar reproducción" },
-                      ].map(({ label }) => (
-                        <button key={label} className="w-full rounded-2xl border border-white/10 bg-[#11161f] px-4 py-3 text-left text-sm text-slate-100 hover:bg-white/5 transition-all">
+                      {["Sala privada", "Chat", "Sincronizar reproducción"].map((label) => (
+                        <button key={label} onClick={() => setCinemaToggles((prev) => ({ ...prev, [label]: !prev[label] }))}
+                          className="w-full rounded-2xl border border-white/10 bg-[#11161f] px-4 py-3 text-left text-sm text-slate-100 hover:bg-white/5 transition-all">
                           <div className="flex items-center justify-between gap-3">
                             <span>{label}</span>
-                            <span className="h-5 w-10 rounded-full bg-white/10 p-1 flex items-center">
-                              <span className="h-4 w-4 rounded-full bg-white shadow-sm" />
+                            <span
+                              className={`w-10 h-5.5 rounded-full transition-all relative flex-shrink-0 ${cinemaToggles[label] ? "bg-primary" : "bg-white/10"}`}
+                              style={{ height: "22px", width: "40px" }}
+                            >
+                              <span
+                                className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-200 ${cinemaToggles[label] ? "left-[calc(100%-18px)]" : "left-0.5"}`}
+                              />
                             </span>
                           </div>
                         </button>
@@ -1215,29 +1240,52 @@ function DetailPage({
         </div>
       ) : (
         <>
-          {/* Banner */}
-          <div className="relative rounded-2xl overflow-hidden mb-8 h-56 sm:h-72"
-            style={{ background: `linear-gradient(135deg, ${from} 0%, ${to} 100%)` }}>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "radial-gradient(circle at 60% 30%, rgba(255,255,255,0.2), transparent 60%)" }} />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all hover:scale-110">
-                <Play size={28} className="text-white fill-white ml-1" />
-              </button>
-            </div>
-            <div className="absolute bottom-4 left-4 right-4">
-              <div className="inline-block bg-black/40 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg">Tráiler oficial</div>
-            </div>
+          {/* Banner / Trailer */}
+          <div className="relative rounded-2xl overflow-hidden mb-8 h-56 sm:h-72 bg-black">
+            {item.trailer?.includes('/embed/') && showTrailer ? (
+              <iframe
+                src={`${item.trailer}&autoplay=1`}
+                title="Tráiler oficial"
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            ) : (
+              <div className="absolute inset-0">
+                <img src={item.cover ?? `https://picsum.photos/seed/${encodeURIComponent(item.title)}/1200/600`} alt={item.title} className="absolute inset-0 w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "radial-gradient(circle at 60% 30%, rgba(255,255,255,0.15), transparent 60%)" }} />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {item.trailer?.includes('/embed/') ? (
+                    <button
+                      onClick={() => setShowTrailer(true)}
+                      className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all hover:scale-110"
+                    >
+                      <Play size={28} className="text-white fill-white ml-1" />
+                    </button>
+                  ) : (
+                    <a
+                      href={item.trailer ?? '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all hover:scale-110"
+                    >
+                      <Play size={28} className="text-white fill-white ml-1" />
+                    </a>
+                  )}
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="inline-block bg-black/40 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-lg">Tráiler oficial</div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Poster + info */}
             <div className="lg:w-56 flex-shrink-0">
-              <div className="rounded-2xl overflow-hidden mb-4 h-72 lg:h-80" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}>
-                <div className="w-full h-full flex items-end p-4">
-                  <span className="text-white font-bold text-lg drop-shadow-lg">{item.title}</span>
-                </div>
-              </div>
+              <Poster src={item.cover} title={item.title} className="rounded-2xl mb-4 h-72 lg:h-80" />
               <button
                 onClick={() => onToggleFavorite(item.id)}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium border transition-all mb-2
@@ -1280,7 +1328,7 @@ function DetailPage({
                     <span className="text-muted-foreground text-xs block mb-1.5">Reparto principal</span>
                     <div className="flex gap-2 flex-wrap">
                       {item.cast.map((actor) => (
-                        <span key={actor} className="bg-secondary text-foreground text-xs px-2.5 py-1 rounded-lg">{actor}</span>
+                        <button key={actor} onClick={(e) => { e.stopPropagation(); onActorClick?.(actor); }} className="bg-secondary text-foreground text-xs px-2.5 py-1 rounded-lg hover:bg-primary/20 hover:text-primary transition-colors cursor-pointer">{actor}</button>
                       ))}
                     </div>
                   </div>
@@ -1431,8 +1479,8 @@ function ChatbotPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
 }
 
 // ─── SPORTS PAGE ──────────────────────────────────────────────────────────────
-function SportsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
-  const [cat, setCat] = useState("Todos");
+function SportsPage({ onNavigate, initialCat }: { onNavigate: (p: Page) => void; initialCat?: string }) {
+  const [cat, setCat] = useState(initialCat ?? "Todos");
   const filtered = cat === "Todos" ? SPORTS_EVENTS : SPORTS_EVENTS.filter((e) => e.sport === cat);
 
   return (
@@ -1465,7 +1513,7 @@ function SportsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((event) => (
-            <div key={event.id} className="bg-card border border-border rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-black/30">
+            <div key={event.id} onClick={() => setCat(event.sport)} className="bg-card border border-border rounded-xl p-5 hover:border-primary/40 transition-all hover:shadow-lg hover:shadow-black/30 cursor-pointer">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
                   <span className="text-2xl">{SPORT_ICONS[event.sport] || "🏆"}</span>
@@ -1516,12 +1564,88 @@ function SportsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
 // ─── PLATFORMS PAGE ───────────────────────────────────────────────────────────
 function PlatformsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [showLoginFor, setShowLoginFor] = useState<string | null>(null);
+  const [acquiredPlatforms, setAcquiredPlatforms] = useState<string[]>([]);
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const platform = PLATFORMS_DATA.find((p) => p.id === selected);
   const platformContent = selected
     ? ALL_CONTENT.filter((c) => c.platforms.includes(platform?.name ?? ""))
     : [];
 
+  const handleLogin = (platformId: string) => {
+    setAcquiredPlatforms((prev) => [...prev, platformId]);
+    setShowLoginFor(null);
+    setLoginForm({ email: "", password: "" });
+    setSelected(platformId);
+  };
+
+  const handlePlatformClick = (platformId: string) => {
+    if (acquiredPlatforms.includes(platformId)) {
+      setSelected(platformId);
+    } else {
+      setShowLoginFor(platformId);
+    }
+  };
+
+  // Login overlay
+  if (showLoginFor) {
+    const p = PLATFORMS_DATA.find((x) => x.id === showLoginFor);
+    if (!p) return null;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="w-full max-w-md bg-card border border-border rounded-2xl p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black"
+              style={{ background: `${p.color}15`, color: p.color }}>
+              {p.name[0]}
+            </div>
+            <div>
+              <h2 className="text-foreground text-lg font-bold">Iniciar sesión</h2>
+              <p className="text-muted-foreground text-sm">{p.name}</p>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-foreground text-sm font-medium mb-1.5">Correo electrónico</label>
+              <input
+                value={loginForm.email}
+                onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
+                type="email"
+                placeholder="tu@correo.com"
+                className="w-full bg-input-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 transition-all"
+              />
+            </div>
+            <div>
+              <label className="block text-foreground text-sm font-medium mb-1.5">Contraseña</label>
+              <input
+                value={loginForm.password}
+                onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
+                type="password"
+                placeholder="••••••••"
+                className="w-full bg-input-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 transition-all"
+              />
+            </div>
+            <button
+              onClick={() => handleLogin(showLoginFor)}
+              className="w-full bg-primary hover:bg-primary/80 text-white font-semibold py-3 rounded-xl transition-all hover:scale-[1.02] text-sm"
+            >
+              Iniciar sesión
+            </button>
+            <button
+              onClick={() => setShowLoginFor(null)}
+              className="w-full text-muted-foreground hover:text-foreground text-sm font-medium py-2 transition-colors"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Platform detail view (selected)
   if (selected && platform) {
+    const isAcquired = acquiredPlatforms.includes(selected);
     return (
       <div>
         <button onClick={() => setSelected(null)}
@@ -1538,27 +1662,52 @@ function PlatformsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
             <div className="flex items-center gap-3 mt-1">
               <span className="text-muted-foreground text-sm">{platform.quality}</span>
               <span className="text-muted-foreground text-sm">·</span>
-              <span style={{ color: platform.color }} className="text-sm font-medium">{platform.price}</span>
+              {isAcquired ? (
+                <span className="text-green-400 text-sm font-medium flex items-center gap-1">
+                  <Check size={14} /> Adquirido
+                </span>
+              ) : (
+                <span style={{ color: platform.color }} className="text-sm font-medium">{platform.price}</span>
+              )}
             </div>
           </div>
-          <a href="#" className="ml-auto bg-primary hover:bg-primary/80 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2">
-            <ExternalLink size={14} /> Ir a {platform.name}
-          </a>
+          {!isAcquired && (
+            <button onClick={() => { setSelected(null); setShowLoginFor(platform.id); }}
+              className="ml-auto bg-primary hover:bg-primary/80 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2">
+              <ExternalLink size={14} /> Iniciar sesión
+            </button>
+          )}
         </div>
         <p className="text-muted-foreground text-sm mb-6">{platform.description}</p>
-        <h2 className="text-foreground font-semibold text-base mb-4">Contenido disponible ({platformContent.length})</h2>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {platformContent.map((item) => (
-            <ContentCard key={item.id} item={item} onNavigate={(p, id) => onNavigate(p)} favorites={[]} onToggleFavorite={() => {}} />
-          ))}
-        </div>
-        {platformContent.length === 0 && (
-          <div className="text-center py-12 text-muted-foreground">No hay contenido registrado para esta plataforma en el demo.</div>
+        {isAcquired && (
+          <>
+            <h2 className="text-foreground font-semibold text-base mb-4">Contenido disponible ({platformContent.length})</h2>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {platformContent.map((item) => (
+                <ContentCard key={item.id} item={item} onNavigate={(p, id) => onNavigate(p, id)} favorites={[]} onToggleFavorite={() => {}} />
+              ))}
+            </div>
+            {platformContent.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">No hay contenido registrado para esta plataforma en el demo.</div>
+            )}
+          </>
+        )}
+        {!isAcquired && (
+          <div className="text-center py-12 text-muted-foreground">
+            <Monitor size={40} className="mx-auto mb-4 opacity-30" />
+            <p className="text-lg font-semibold mb-2">Inicia sesión para ver el catálogo</p>
+            <p className="text-sm mb-6">Adquiere esta plataforma para explorar todo su contenido disponible.</p>
+            <button onClick={() => { setSelected(null); setShowLoginFor(platform.id); }}
+              className="bg-primary hover:bg-primary/80 text-white font-semibold px-6 py-2.5 rounded-xl transition-all text-sm">
+              Iniciar sesión
+            </button>
+          </div>
         )}
       </div>
     );
   }
 
+  // Platform grid (overview)
   return (
     <div>
       <h1 className="text-foreground text-2xl font-bold mb-2 flex items-center gap-2">
@@ -1566,23 +1715,32 @@ function PlatformsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
       </h1>
       <p className="text-muted-foreground text-sm mb-8">Explora el catálogo de cada servicio de streaming</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {PLATFORMS_DATA.map((p) => (
-          <button key={p.id} onClick={() => setSelected(p.id)}
-            className="bg-card border border-border rounded-2xl p-5 flex flex-col items-center gap-3 hover:border-primary/40 hover:scale-105 transition-all group">
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black"
-              style={{ background: `${p.color}15`, color: p.color }}>
-              {p.name[0]}
-            </div>
-            <div className="text-center">
-              <p className="text-foreground font-semibold text-sm">{p.name}</p>
-              <p className="text-muted-foreground text-[10px] mt-0.5">{p.quality}</p>
-              <p style={{ color: p.color }} className="text-[11px] font-medium mt-1">{p.price}</p>
-            </div>
-            <span className="text-primary text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-              Ver catálogo <ChevronRight size={11} />
-            </span>
-          </button>
-        ))}
+        {PLATFORMS_DATA.map((p) => {
+          const isAcquired = acquiredPlatforms.includes(p.id);
+          return (
+            <button key={p.id} onClick={() => handlePlatformClick(p.id)}
+              className="bg-card border border-border rounded-2xl p-5 flex flex-col items-center gap-3 hover:border-primary/40 hover:scale-105 transition-all group">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black"
+                style={{ background: `${p.color}15`, color: p.color }}>
+                {p.name[0]}
+              </div>
+              <div className="text-center">
+                <p className="text-foreground font-semibold text-sm">{p.name}</p>
+                <p className="text-muted-foreground text-[10px] mt-0.5">{p.quality}</p>
+                {isAcquired ? (
+                  <p className="text-green-400 text-[11px] font-medium mt-1 flex items-center justify-center gap-1">
+                    <Check size={10} /> Adquirido
+                  </p>
+                ) : (
+                  <p style={{ color: p.color }} className="text-[11px] font-medium mt-1">{p.price}</p>
+                )}
+              </div>
+              <span className="text-primary text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+                Ver catálogo <ChevronRight size={11} />
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -1616,7 +1774,8 @@ function FavoritesPage({
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {items.map((item) => (
-            <div key={item.id} className="group relative rounded-xl overflow-hidden bg-card border border-border hover:border-primary/40 hover:scale-105 transition-all cursor-pointer"
+            <div key={item.id} className="group relative rounded-xl overflow-hidden bg-card border hover:border-primary/40 hover:scale-105 transition-all cursor-pointer"
+              style={getTypeBorder(item.type)}
               onClick={() => onNavigate("detail", item.id)}>
               <Poster id={item.id} title={item.title} className="h-52" />
               <div className="p-2.5">
@@ -1681,7 +1840,8 @@ function HistoryPage({
           <div className="space-y-2">
             {opened.map((item) => (
               <div key={item.id}
-                className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-all cursor-pointer"
+                className="flex items-center gap-3 bg-card border rounded-xl p-3 hover:border-primary/40 transition-all cursor-pointer"
+                style={getTypeBorder(item.type)}
                 onClick={() => onNavigate("detail", item.id)}>
                 <Poster src={item.cover} title={item.title} className="w-12 h-16 rounded-lg flex-shrink-0" />
                 <div className="flex-1 min-w-0">
@@ -1806,15 +1966,6 @@ function SettingsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
         { label: "Compartir actividad", value: false, type: "toggle" },
       ],
     },
-    {
-      title: "Suscripciones favoritas",
-      items: [
-        { label: "Netflix", value: true, type: "toggle" },
-        { label: "Disney+", value: true, type: "toggle" },
-        { label: "Prime Video", value: false, type: "toggle" },
-        { label: "Max", value: true, type: "toggle" },
-      ],
-    },
   ];
 
   const [toggles, setToggles] = useState<Record<string, boolean>>({
@@ -1871,6 +2022,7 @@ export default function App() {
   const [detailId, setDetailId] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState<number[]>([1, 103]);
+  const [searchFilter, setSearchFilter] = useState("Todos");
 
   const navigate = (p: Page, id?: number) => {
     if (id !== undefined) setDetailId(id);
@@ -1878,8 +2030,21 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const filterNavigate = (p: Page, filter: string) => {
+    setSearchFilter(filter);
+    setPage(p);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleSearchSubmit = () => {
     if (searchQuery.trim()) navigate("search");
+  };
+
+  const handleActorClick = (actor: string) => {
+    setSearchQuery(actor);
+    setPage("search");
+    setSearchFilter("Todos");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const toggleFavorite = (id: number) => {
@@ -1906,20 +2071,22 @@ export default function App() {
 
   return (
     <AppShell
-      currentPage={page}
-      onNavigate={navigate}
-      searchQuery={searchQuery}
-      onSearchChange={setSearchQuery}
-      onSearchSubmit={handleSearchSubmit}
-    >
+        currentPage={page}
+        onNavigate={navigate}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onSearchSubmit={handleSearchSubmit}
+        onFilterNavigate={filterNavigate}
+        searchFilter={searchFilter}
+      >
       {page === "dashboard" && (
         <DashboardPage onNavigate={navigate} favorites={favorites} onToggleFavorite={toggleFavorite} />
       )}
       {page === "search" && (
-        <SearchPage onNavigate={navigate} searchQuery={searchQuery} favorites={favorites} onToggleFavorite={toggleFavorite} />
+        <SearchPage key={searchFilter} onNavigate={navigate} searchQuery={searchQuery} favorites={favorites} onToggleFavorite={toggleFavorite} initialFilter={searchFilter} />
       )}
       {page === "detail" && (
-        <DetailPage itemId={detailId} onNavigate={navigate} favorites={favorites} onToggleFavorite={toggleFavorite} />
+        <DetailPage itemId={detailId} onNavigate={navigate} favorites={favorites} onToggleFavorite={toggleFavorite} onActorClick={handleActorClick} />
       )}
       {page === "sports" && <SportsPage onNavigate={navigate} />}
       {page === "platforms" && <PlatformsPage onNavigate={navigate} />}
