@@ -26,6 +26,7 @@ interface ContentItem {
   synopsis: string;
   director?: string;
   cast?: string[];
+  cover?: string;
   trending?: boolean;
   newRelease?: boolean;
 }
@@ -146,16 +147,16 @@ const HISTORY_SEARCHES = ["Inception", "Breaking Bad", "Deportes en vivo", "Marv
 const HISTORY_OPENED = [1, 102, 5, 103, 6, 108];
 
 // ─── Poster (gradient placeholder) ───────────────────────────────────────────
-function Poster({ id, title, className = "" }: { id: number; title: string; className?: string }) {
-  const [from, to] = getGradient(id);
+function Poster({ src, title, className = "" }: { src?: string; title: string; className?: string }) {
+  const [from, to] = getGradient(title.length);
+  const coverUrl = src ?? `https://picsum.photos/seed/${encodeURIComponent(title)}/500/750`;
   return (
     <div
       className={`relative overflow-hidden flex flex-col items-center justify-end ${className}`}
       style={{ background: `linear-gradient(160deg, ${from} 0%, ${to} 100%)` }}
     >
-      <div className="absolute inset-0 opacity-20"
-        style={{ backgroundImage: "radial-gradient(circle at 30% 20%, rgba(255,255,255,0.15) 0%, transparent 60%)" }}
-      />
+      <img src={coverUrl} alt={title} className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
       <div className="relative z-10 p-3 w-full text-center">
         <span className="text-white/90 text-xs font-semibold leading-tight line-clamp-2 drop-shadow-lg">
           {title}
@@ -203,7 +204,7 @@ function ContentCard({
       className="group relative flex-shrink-0 w-36 sm:w-40 cursor-pointer rounded-xl overflow-hidden bg-card border border-border transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-black/60 hover:border-primary/40"
       onClick={() => onNavigate("detail", item.id)}
     >
-      <Poster id={item.id} title={item.title} className="h-52" />
+      <Poster src={item.cover} title={item.title} className="h-52" />
       <button
         className="absolute top-2 right-2 p-1.5 rounded-full bg-black/50 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity z-20"
         onClick={(e) => { e.stopPropagation(); onToggleFavorite(item.id); }}
@@ -872,7 +873,7 @@ function DashboardPage({
           {continueItems.map(({ item, progress }) => (
             <div key={item.id} onClick={() => onNavigate("detail", item.id)}
               className="flex-shrink-0 w-48 cursor-pointer rounded-xl overflow-hidden bg-card border border-border hover:border-primary/40 hover:scale-105 transition-all group">
-              <Poster id={item.id} title={item.title} className="h-28" />
+              <Poster src={item.cover} title={item.title} className="h-28" />
               <div className="px-3 pb-3 pt-2">
                 <p className="text-foreground text-xs font-semibold truncate">{item.title}</p>
                 <p className="text-muted-foreground text-[10px] mb-2">{item.duration}</p>
@@ -1057,8 +1058,9 @@ function SearchResultCard({
   return (
     <div className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/40 transition-all hover:shadow-xl hover:shadow-black/40 group">
       <div className="flex">
-        <div className="w-24 flex-shrink-0 h-32 cursor-pointer relative" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}
+        <div className="w-24 flex-shrink-0 h-32 cursor-pointer relative"
           onClick={() => onNavigate("detail", item.id)}>
+        <Poster src={item.cover} title={item.title} className="h-full w-full" />
           <div className="absolute inset-0 opacity-20 bg-gradient-to-t from-black/40 to-transparent" />
         </div>
         <div className="flex-1 p-3 min-w-0">
@@ -1681,7 +1683,7 @@ function HistoryPage({
               <div key={item.id}
                 className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 hover:border-primary/40 transition-all cursor-pointer"
                 onClick={() => onNavigate("detail", item.id)}>
-                <Poster id={item.id} title={item.title} className="w-12 h-16 rounded-lg flex-shrink-0" />
+                <Poster src={item.cover} title={item.title} className="w-12 h-16 rounded-lg flex-shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="text-foreground text-sm font-semibold truncate">{item.title}</p>
                   <div className="flex items-center gap-2 mt-0.5">
