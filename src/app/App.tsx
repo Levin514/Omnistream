@@ -12,7 +12,8 @@ type Page =
   | "landing" | "login" | "register" | "dashboard"
   | "search" | "detail" | "sports" | "platforms"
   | "favorites" | "history" | "profile" | "settings"
-  | "chatbot";
+  | "chatbot"
+  | "subscription";
 
 interface ContentItem {
   id: number;
@@ -298,6 +299,7 @@ function Sidebar({
     { id: "favorites" as Page, label: "Favoritos", icon: <Heart size={18} /> },
     { id: "history" as Page, label: "Historial", icon: <Clock size={18} /> },
     { id: "profile" as Page, label: "Mi Perfil", icon: <User size={18} /> },
+    { id: "subscription" as Page, label: "Planes", icon: <Zap size={18} /> },
   ];
 
   return (
@@ -1942,6 +1944,57 @@ function ProfilePage({ onNavigate, favorites }: { onNavigate: (p: Page) => void;
   );
 }
 
+// ─── SUBSCRIPTION PAGE ─────────────────────────────────────────────────────────
+function SubscriptionPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
+  const plans = [
+    { name: "Plan Estudiantil", price: "2.99", slots: 2, color: "from-blue-500 to-cyan-400", features: ["Acceso a cine virtual", "2 cupos para cine virtual", "Calidad HD", "Soporte básico"] },
+    { name: "Plan Básico", price: "4.99", slots: 4, color: "from-purple-500 to-pink-500", features: ["Acceso a cine virtual", "4 cupos para cine virtual", "Calidad HD", "Soporte prioritario", "Dispositivos ilimitados"] },
+    { name: "Plan Premium", price: "7.99", slots: 10, color: "from-amber-500 to-orange-600", features: ["Acceso a cine virtual", "10 cupos para cine virtual", "Calidad 4K", "Soporte VIP 24/7", "Dispositivos ilimitados", "Contenido exclusivo"] },
+  ];
+
+  return (
+    <div className="max-w-5xl">
+      <h1 className="text-foreground text-2xl font-bold mb-2 flex items-center gap-2">
+        <Zap size={22} className="text-primary" /> Planes de Suscripción
+      </h1>
+      <p className="text-muted-foreground text-sm mb-8">Elige el plan ideal para disfrutar de Omnistream al máximo</p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {plans.map((plan, i) => (
+          <div key={i} className="relative bg-card border border-border rounded-2xl overflow-hidden flex flex-col transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5">
+            <div className={`h-2 bg-gradient-to-r ${plan.color}`} />
+            <div className="p-6 flex flex-col flex-1">
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center mb-4`}>
+                <Zap size={20} className="text-white" />
+              </div>
+              <h3 className="text-foreground text-lg font-bold mb-1">{plan.name}</h3>
+              <div className="flex items-baseline gap-1 mb-4">
+                <span className="text-foreground text-3xl font-bold">${plan.price}</span>
+                <span className="text-muted-foreground text-sm">/mes</span>
+              </div>
+              <div className="bg-secondary/50 rounded-xl px-4 py-3 mb-5">
+                <p className="text-foreground text-sm font-semibold">{plan.slots} cupos</p>
+                <p className="text-muted-foreground text-xs">para cine virtual</p>
+              </div>
+              <ul className="space-y-2.5 mb-6 flex-1">
+                {plan.features.map((f, j) => (
+                  <li key={j} className="flex items-center gap-2.5 text-sm text-foreground/80">
+                    <Check size={14} className="text-green-400 flex-shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <button className={`w-full bg-gradient-to-r ${plan.color} text-white text-sm font-semibold py-3 rounded-xl hover:opacity-90 transition-opacity`}>
+                Suscribirse
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── SETTINGS PAGE ────────────────────────────────────────────────────────────
 function SettingsPage({ onNavigate }: { onNavigate: (p: Page) => void }) {
   const sections = [
@@ -2063,6 +2116,7 @@ export default function App() {
       history: "Historial",
       profile: "Mi Perfil",
       settings: "Configuración",
+      subscription: "Planes de Suscripción",
     };
     return titles[page];
   };
@@ -2101,6 +2155,7 @@ export default function App() {
       {page === "profile" && <ProfilePage onNavigate={navigate} favorites={favorites} />}
       {page === "settings" && <SettingsPage onNavigate={navigate} />}
       {page === "chatbot" && <ChatbotPage onNavigate={navigate} />}
+      {page === "subscription" && <SubscriptionPage onNavigate={navigate} />}
     </AppShell>
   );
 }
